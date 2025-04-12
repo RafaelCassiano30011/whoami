@@ -1,10 +1,24 @@
-const WebSocket = require('ws');
+import { Console } from 'console';
+import { randomUUID } from 'crypto';
+import { Server } from 'socket.io';
+
+const rooms = {}
 
 function setupWebSocket(server) {
-  const wss = new WebSocket.Server({ server });
+  const wss = new Server(server);
 
   wss.on('connection', (ws) => {
-    console.log('Novo jogador conectado');
+
+    ws.emit("id", ws.id)
+
+    ws.on('createRoom', (userId) => {
+      const roomId = randomUUID();
+      rooms[roomId] = {players:[userId]}
+
+      ws.join(roomId);
+      ws.emit("salaCriada", roomId);
+      console.log(ws.emit)
+    });
 
     ws.on('message', (message) => {
       console.log('Mensagem recebida:', message.toString());
@@ -18,4 +32,4 @@ function setupWebSocket(server) {
   });
 }
 
-module.exports = setupWebSocket;
+export default setupWebSocket;
