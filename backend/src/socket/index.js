@@ -4,7 +4,7 @@ import { handleCreateRoom, handleJoinRoom, handleLeaveRoom } from "../controller
 function setupWebSocket(server) {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: "*",
       methods: ["GET", "POST"],
       credentials: true,
     },
@@ -19,6 +19,7 @@ function setupWebSocket(server) {
 
     socket.on("disconnect", () => {
       console.log(`Player ${socket.id} desconectou-se`);
+      
     });
 
     socket.on("message", (msg) => {
