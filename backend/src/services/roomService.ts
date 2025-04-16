@@ -1,18 +1,24 @@
 import { randomUUID } from "crypto";
 
-const rooms = {};
+const rooms: { [key: string]: { players: Player[] } } = {};
+
+export interface Player {
+  userId: string;
+  name: string;
+  status: "online" | "offline";
+}
 
 export const RoomService = {
-  createRoom(player) {
+  createRoom(player: Omit<Player, "status">) {
     const roomId = randomUUID();
-    rooms[roomId] = { players: [player] };
+    rooms[roomId] = { players: [{ ...player, status: "online" }] };
 
-    console.log(rooms);
+    console.log(rooms[roomId].players);
 
     return roomId;
   },
 
-  joinRoom(roomId, player) {
+  joinRoom(roomId: string, player: Omit<Player, "status">) {
     console.log(roomId, player);
 
     const room = rooms[roomId];
@@ -25,16 +31,16 @@ export const RoomService = {
       return { error: "Sala cheia" };
     }
 
-    if (!room.players.find((p) => p.id === player.id)) room.players.push(player);
+    if (!room.players.find((p) => p.userId === player.userId)) room.players.push({ ...player, status: "online" });
 
     return { newPlayer: player, players: room.players };
   },
 
-  leaveRoom(roomId, userId) {
+  leaveRoom(roomId: string, userId: string) {
     const room = rooms[roomId];
     if (!room) return false;
 
-    room.players = room.players.filter((p) => p.id !== userId);
+    room.players = room.players.filter((p) => p.userId !== userId);
     if (room.players.length === 0) {
       delete rooms[roomId];
       return true;
@@ -43,7 +49,7 @@ export const RoomService = {
     return false;
   },
 
-  getRoom(roomId) {
+  getRoom(roomId: string) {
     return rooms[roomId];
   },
 };

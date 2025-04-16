@@ -4,10 +4,10 @@ interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
   type?: "submit" | "reset" | "button";
 }
 
-export function Button({ children, ...rest }: ButtonProps) {
+export function Button({ children, className, ...rest }: ButtonProps) {
   return (
     <button
-      className="w-full py-3 px-4 bg-yellow-500 hover:bg-yellow-600 rounded text-white font-bold transition duration-200"
+      className={`w-full py-3 px-4 bg-yellow-500 hover:bg-yellow-600 rounded text-white font-bold transition duration-200 ${className}`}
       {...rest}
     >
       {children}

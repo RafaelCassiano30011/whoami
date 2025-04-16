@@ -3,10 +3,14 @@ import socket from "../socket/socket";
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../context/Global";
 import EnterName from "../components/EnterName";
+import ListPlayers from "../components/ListPlayers";
+import Container from "../components/Container";
+import { Button } from "../components/Button";
 
-interface Player {
+export interface Player {
   id: string;
   name: string;
+  status?: "online" | "offline";
 }
 
 export function Room() {
@@ -36,8 +40,6 @@ export function Room() {
     socket.on("novoJogador", ({ players }: { players: Player[] }) => {
       setPlayers(players);
     });
-
-    
   }, [roomId, userId, playerName]);
 
   if (enterName && !playerName)
@@ -51,12 +53,13 @@ export function Room() {
 
   return (
     <div>
-      <li>RoomID: {roomId}</li>
-      {players.map((player) => (
-        <li>
-          Jogador {player.name} - {player.id}
-        </li>
-      ))}
+      <Container className="flex justify-start items-start mt-10">
+        <ListPlayers players={players} />
+      </Container>
+
+      <Button className="absolute left-1/2 bottom-10 -translate-x-1/2 max-w-fit">
+        <span className="text-2xl font-bold">Iniciar o jogo</span>
+      </Button>
     </div>
   );
 }

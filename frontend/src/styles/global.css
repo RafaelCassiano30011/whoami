@@ -21,10 +21,10 @@
   animation: gradient-animation 10s ease infinite; /* Aplica a animação */
 }
 
-body {
-  @apply animated-gradient min-h-screen text-gray-800;
+html {
+  height: 100vh;
 }
 
-#root {
-  @apply min-h-screen w-full;
+body {
+  @apply animated-gradient text-gray-800;
 }

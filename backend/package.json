@@ -1,22 +1,25 @@
 {
   "name": "quem-sou-eu-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js"
+    "dev": "tsx watch src/server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "express": "^5.1.0",
+    "socket.io": "^4.8.1",
+    "ts-node": "^10.9.2",
     "ws": "^8.18.1",
-     "socket.io": "^4.8.1"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "@types/express": "^5.0.1",
+    "nodemon": "^3.1.9",
+    "tsx": "4.19.2",
+    "typescript": "^5.8.3"
   }
 }
