@@ -21,8 +21,11 @@
   animation: gradient-animation 10s ease infinite; /* Aplica a animação */
 }
 
-html {
+#root {
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 body {

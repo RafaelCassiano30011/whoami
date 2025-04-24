@@ -12,13 +12,14 @@ export interface Player {
   userId: string;
   name: string;
   status: "online" | "offline";
+  adm?: boolean;
 }
 
 export const RoomService = {
   createRoom(player: Omit<Player, "status">) {
     const roomId = randomUUID();
     rooms[roomId] = {
-      players: [{ ...player, status: "online" }],
+      players: [{ ...player, status: "online", adm: true }],
       characters: {},
     };
     return roomId;

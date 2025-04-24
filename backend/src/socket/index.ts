@@ -4,6 +4,7 @@ import { createRoom } from "../controllers/createRoom";
 import { joinRoom } from "../controllers/joinRoom";
 import { leaveRoom } from "../controllers/leaveRoom";
 import { handleSubmitCharacter } from "../controllers/characterController";
+import { startGame } from "../controllers/startGame";
 
 function setupWebSocket(server: Server) {
   const io = new ServerIO(server, {
@@ -21,6 +22,8 @@ function setupWebSocket(server: Server) {
     socket.on("joinRoom", (data) => joinRoom(socket, data));
     socket.on("leaveRoom", (data) => leaveRoom(socket, data));
     socket.on("submitCharacter", (data) => handleSubmitCharacter(socket, data));
+
+    socket.on("startGame", (data) => startGame(socket, data));
 
     socket.on("disconnect", () => {
       console.log(`Player ${socket.id} desconectou-se`);

@@ -15,6 +15,6 @@ export function handleSubmitCharacter(socket: Socket, data: { roomId: string; us
   if (result.error) {
     socket.emit("error", { message: result.error });
   } else {
-    socket.emit("characterSubmitted");
+    socket.emit("characterSubmitted",result.allSubmitted);
   }
 }
