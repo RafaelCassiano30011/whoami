@@ -9,9 +9,11 @@ import { Button } from "../components/Button";
 import SelectCaracteres from "../components/SelectCaracteres";
 
 export interface Player {
-  id: string;
+  userId: string;
   name: string;
   status?: "online" | "offline";
+  adm?: boolean;
+  character?: string;
 }
 
 export function Room() {
@@ -19,14 +21,9 @@ export function Room() {
   const { playerName, userId } = useGlobalContext();
   const [players, setPlayers] = useState<Player[]>([]);
   const [enterName, setEnterName] = useState(false);
+  const [roomStatus, setRoomStatus] = useState("");
 
-  console.log({
-    roomId,
-    playerName,
-    userId,
-    players,
-    enterName,
-  });
+  console.log(players, userId);
 
   useEffect(() => {
     if (!userId || !playerName) {
@@ -34,13 +31,30 @@ export function Room() {
     }
 
     socket.emit("joinRoom", { roomId, userId, name: playerName });
-    socket.on("entrouNaSala", ({ players }: { players: Player[] }) => {
-      setPlayers(players);
-    });
 
-    socket.on("novoJogador", ({ players }: { players: Player[] }) => {
+    const handleEntrouNaSala = ({ players }: { players: Player[] }) => {
       setPlayers(players);
-    });
+    };
+
+    const handleNovoJogador = ({ players }: { players: Player[] }) => {
+      setPlayers(players);
+    };
+
+    const handleRoomStatus = ({ status }: { status: string }) => {
+      console.log("status", status);
+      setRoomStatus(status);
+    };
+
+    socket.on("entrouNaSala", handleEntrouNaSala);
+    socket.on("novoJogador", handleNovoJogador);
+    socket.on("roomStatus", handleRoomStatus);
+
+    // Limpar os eventos ao desmontar o componente ou quando as dependências mudarem
+    return () => {
+      socket.off("entrouNaSala", handleEntrouNaSala);
+      socket.off("novoJogador", handleNovoJogador);
+      socket.off("roomStatus", handleRoomStatus);
+    };
   }, [roomId, userId, playerName]);
 
   if (enterName && !playerName)
@@ -56,12 +70,21 @@ export function Room() {
     <div>
       <Container className="flex justify-start items-start mt-10">
         <ListPlayers players={players} />
-        <SelectCaracteres></SelectCaracteres>
+
+        {roomStatus === "SelectCaracteres" && <SelectCaracteres roomId={roomId!} />}
       </Container>
 
-      <Button onClick={() => {}} className="absolute left-1/2 bottom-10 -translate-x-1/2 max-w-fit">
-        <span className="text-2xl font-bold">Iniciar o jogo</span>
-      </Button>
+      {players.find((player) => player.userId === userId)?.adm && (
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            socket.emit("startGame", { roomId, userId });
+          }}
+          className="absolute left-1/2 bottom-10 -translate-x-1/2 max-w-fit"
+        >
+          <span className="text-2xl font-bold">Iniciar o jogo</span>
+        </Button>
+      )}
     </div>
   );
 }

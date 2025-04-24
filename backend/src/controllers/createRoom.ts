@@ -12,5 +12,7 @@ export function createRoom(socket: Socket, data: Omit<Player, "status">) {
   const { userId, name } = createRoomSchema.parse(data);
 
   const roomId = RoomService.createRoom(createPlayer({ userId, name }));
+
+  socket.join(roomId);
   socket.emit("salaCriada", roomId);
 }

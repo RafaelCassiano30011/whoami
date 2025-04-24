@@ -23,7 +23,7 @@ function setupWebSocket(server: Server) {
     socket.on("leaveRoom", (data) => leaveRoom(socket, data));
     socket.on("submitCharacter", (data) => handleSubmitCharacter(socket, data));
 
-    socket.on("startGame", (data) => startGame(socket, data));
+    socket.on("startGame", (data) => startGame(io, data));
 
     socket.on("disconnect", () => {
       console.log(`Player ${socket.id} desconectou-se`);
