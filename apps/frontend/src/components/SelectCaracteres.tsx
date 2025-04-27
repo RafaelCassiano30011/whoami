@@ -6,12 +6,12 @@ import { useGlobalContext } from "../context/Global";
 import { Button } from "./Button";
 
 interface Props {
+  quantityPlayers?: number;
+  playersAlready?: number;
   roomId: string;
 }
 
-export default function SelectCaracteres({ roomId }: Props) {
-  const [time, setTime] = useState(10);
-  const [timeActive, setTimeActive] = useState(true);
+export default function SelectCaracteres({ quantityPlayers, playersAlready = 0, roomId }: Props) {
   const { userId } = useGlobalContext();
   const [character, setCharacter] = useState("");
 
@@ -40,7 +40,12 @@ export default function SelectCaracteres({ roomId }: Props) {
         className="flex flex-col w-[700px]"
       >
         <form className="w-full flex flex-col items-center gap-8">
-          <h2 className="text-5xl font-bold text-gray-800">Escolha em {time} </h2>
+          <h2 className="text-5xl font-bold text-gray-800 w-full flex items-center justify-between">
+            Escolha Algo
+            <span className="text-2xl font-bold text-green-500">
+              {playersAlready} / {quantityPlayers} jogadores
+            </span>
+          </h2>
           <Input
             placeholder="Escolhar algo (obs: Pessoa famosa,personagem,objeto e etc) para alguem adivinhar"
             value={character}
@@ -52,7 +57,6 @@ export default function SelectCaracteres({ roomId }: Props) {
             onClick={(e) => {
               e.preventDefault();
               socket.emit("submitCharacter", { roomId, userId, character: character });
-              setTimeActive(false);
             }}
           >
             <span className="text-2xl font-bold leading-none">Pronto</span>

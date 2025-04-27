@@ -13,8 +13,12 @@ export function handleSubmitCharacter(socket: Socket, data: { roomId: string; us
   const result = RoomService.submitCharacter(roomId, userId, character);
 
   if (result.error) {
-    socket.emit("error", { message: result.error });
-  } else {
-    socket.emit("characterSubmitted",result.allSubmitted);
+    return socket.emit("error", { message: result.error });
   }
+
+  console.log("character", character);
+
+  socket.emit("characterSubmitted", {
+    submitsCaractersQuantity: result.submitsCaractersQuantity,
+  });
 }

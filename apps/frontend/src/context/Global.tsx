@@ -1,6 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from "react";
 import socket from "../socket/socket";
+import { useNavigate } from "react-router-dom";
+import { roomNotExist } from "../error/roomNotExist";
 
 interface GlobalContextType {
   userId: string;
@@ -17,6 +19,7 @@ interface GlobalContextProviderProps {
 export const GlobalContextProvider = ({ children }: GlobalContextProviderProps) => {
   const [userId, setUserId] = useState<string>("");
   const [playerName, setPlayerName] = useState<string>("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (playerName) {
@@ -48,6 +51,11 @@ export const GlobalContextProvider = ({ children }: GlobalContextProviderProps) 
 
     socket.on("error", (error) => {
       console.log("Error socket: ", error);
+      const errorMessage = error.message || "An error occurred";
+
+      if (errorMessage === "Sala não encontrada") {
+        roomNotExist(navigate);
+      }
     });
   }, []);
 

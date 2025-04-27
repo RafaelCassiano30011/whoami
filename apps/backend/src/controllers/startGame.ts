@@ -16,8 +16,6 @@ export function startGame(io: Server, data: { roomId: string; userId: string }) 
   console.log("room", room);
   const playerIsLeader = room?.players.find((player) => player.userId === userId)?.adm;
 
-  console.log(playerIsLeader);
-
   if (playerIsLeader) {
     io.in(roomId).emit("roomStatus", { status: "SelectCaracteres" });
   } else {

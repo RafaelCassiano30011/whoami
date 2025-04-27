@@ -21,9 +21,8 @@ export function Room() {
   const { playerName, userId } = useGlobalContext();
   const [players, setPlayers] = useState<Player[]>([]);
   const [enterName, setEnterName] = useState(false);
-  const [roomStatus, setRoomStatus] = useState("");
-
-  console.log(players, userId);
+  const [roomStatus, setRoomStatus] = useState("initial");
+  const [playersAlready, setPlayersAlready] = useState(0);
 
   useEffect(() => {
     if (!userId || !playerName) {
@@ -48,6 +47,9 @@ export function Room() {
     socket.on("entrouNaSala", handleEntrouNaSala);
     socket.on("novoJogador", handleNovoJogador);
     socket.on("roomStatus", handleRoomStatus);
+    socket.on("characterSubmitted", ({ submitsCaractersQuantity }: { submitsCaractersQuantity: number }) => {
+      setPlayersAlready(submitsCaractersQuantity);
+    });
 
     // Limpar os eventos ao desmontar o componente ou quando as dependências mudarem
     return () => {
@@ -71,10 +73,12 @@ export function Room() {
       <Container className="flex justify-start items-start mt-10">
         <ListPlayers players={players} />
 
-        {roomStatus === "SelectCaracteres" && <SelectCaracteres roomId={roomId!} />}
+        {roomStatus === "SelectCaracteres" && (
+          <SelectCaracteres quantityPlayers={players.length} playersAlready={playersAlready} roomId={roomId!} />
+        )}
       </Container>
 
-      {players.find((player) => player.userId === userId)?.adm && (
+      {players.find((player) => player.userId === userId)?.adm && roomStatus === "initial" && (
         <Button
           onClick={(e) => {
             e.preventDefault();

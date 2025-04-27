@@ -56,6 +56,11 @@ export const RoomService = {
   },
 
   getRoom(roomId: string) {
+    console.log("getRoom", {
+      rooms,
+      roomId,
+    });
+
     return rooms[roomId];
   },
 
@@ -65,12 +70,12 @@ export const RoomService = {
 
     room.characters[userId] = characterName;
 
-    const allSubmitted = room.players.every((p) => room.characters[p.userId]);
-    if (allSubmitted) {
+    const submitsCaractersQuantity = room.players.filter((p) => room.characters[p.userId]).length;
+    if (submitsCaractersQuantity === room.players.length) {
       this.distributeCharacters(roomId);
     }
 
-    return { success: true, allSubmitted };
+    return { success: true, submitsCaractersQuantity };
   },
 
   distributeCharacters(roomId: string) {
