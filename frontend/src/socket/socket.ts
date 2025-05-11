@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
 // Altere para o endereço do seu backend
-const socket = io("http://localhost:3000/");
+const socket = io("https://whoami-0gqb.onrender.com/");
 
 export default socket;

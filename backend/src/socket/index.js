@@ -19,7 +19,6 @@ function setupWebSocket(server) {
 
     socket.on("disconnect", () => {
       console.log(`Player ${socket.id} desconectou-se`);
-      
     });
 
     socket.on("message", (msg) => {

@@ -3,8 +3,9 @@ import socket from "../socket/socket";
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../context/Global";
 import EnterName from "../components/EnterName";
+import { ListPlayers } from "../components/ListPlayers";
 
-interface Player {
+export interface Player {
   id: string;
   name: string;
 }
@@ -36,8 +37,6 @@ export function Room() {
     socket.on("novoJogador", ({ players }: { players: Player[] }) => {
       setPlayers(players);
     });
-
-    
   }, [roomId, userId, playerName]);
 
   if (enterName && !playerName)
@@ -50,13 +49,10 @@ export function Room() {
     );
 
   return (
-    <div>
-      <li>RoomID: {roomId}</li>
-      {players.map((player) => (
-        <li>
-          Jogador {player.name} - {player.id}
-        </li>
-      ))}
+    <div className="min-h-screen flex flex-col">
+      <div className="flex items-start justify-center min-h-full">
+        <ListPlayers players={players} />
+      </div>
     </div>
   );
 }
