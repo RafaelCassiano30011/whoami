@@ -35,18 +35,16 @@ export const GlobalContextProvider = ({ children }: GlobalContextProviderProps) 
     const storedUserId = localStorage.getItem("userId");
     const storedPlayerName = localStorage.getItem("playerName");
 
+    socket.on("id", (userId) => {
+      setUserId(userId);
+    });
+
     if (storedUserId) {
-      setUserId(storedUserId);
+      socket.emit("refreshId", { oldId: storedUserId });
     }
 
     if (storedPlayerName) {
       setPlayerName(storedPlayerName);
-    }
-
-    if (!storedUserId) {
-      socket.on("id", (userId) => {
-        setUserId(userId);
-      });
     }
 
     socket.on("error", (error) => {

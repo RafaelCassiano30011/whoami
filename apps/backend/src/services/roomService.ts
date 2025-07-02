@@ -1,11 +1,15 @@
 import { randomUUID } from "crypto";
 
-const rooms: {
+export const rooms: {
   [key: string]: {
     players: Player[];
     characters: { [userId: string]: string };
     assignedCharacters?: { [userId: string]: string };
   };
+} = {};
+
+export const players: {
+  [userId: string]: string;
 } = {};
 
 export interface Player {
@@ -22,6 +26,9 @@ export const RoomService = {
       players: [{ ...player, status: "online", adm: true }],
       characters: {},
     };
+
+    players[player.userId] = roomId;
+
     return roomId;
   },
 
@@ -34,6 +41,7 @@ export const RoomService = {
     const alreadyInRoom = room.players.find((p) => p.userId === player.userId);
     if (!alreadyInRoom) {
       room.players.push({ ...player, status: "online" });
+      players[player.userId] = roomId;
     }
 
     return { newPlayer: player, players: room.players };
@@ -64,6 +72,15 @@ export const RoomService = {
     return rooms[roomId];
   },
 
+  getRoomPlayers(roomId: string) {
+    console.log("getRoom", {
+      rooms,
+      roomId,
+    });
+
+    return rooms[roomId].players || [];
+  },
+
   submitCharacter(roomId: string, userId: string, characterName: string) {
     const room = rooms[roomId];
     if (!room) return { error: "Sala não encontrada" };
@@ -73,6 +90,8 @@ export const RoomService = {
     const submitsCaractersQuantity = room.players.filter((p) => room.characters[p.userId]).length;
     if (submitsCaractersQuantity === room.players.length) {
       this.distributeCharacters(roomId);
+
+      return { success: true, submitsCaractersQuantity, assignedCharacters: room.assignedCharacters };
     }
 
     return { success: true, submitsCaractersQuantity };
@@ -105,6 +124,8 @@ export const RoomService = {
     players.forEach((userId, i) => {
       assigned[userId] = shuffled[i];
     });
+
+    console.log("Assigned characters:", assigned);
 
     room.assignedCharacters = assigned;
   },

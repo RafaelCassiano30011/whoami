@@ -26,5 +26,5 @@ export async function joinRoom(socket: Socket, data: { roomId: string; userId: s
     newPlayer: result.newPlayer,
     players: result.players,
   });
-  console.log(`${name} entrou na sala ${roomId}`);
+  console.log(`${name} id ${userId} entrou na sala ${roomId}`);
 }

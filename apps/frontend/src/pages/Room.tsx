@@ -47,8 +47,12 @@ export function Room() {
     socket.on("entrouNaSala", handleEntrouNaSala);
     socket.on("novoJogador", handleNovoJogador);
     socket.on("roomStatus", handleRoomStatus);
+
     socket.on("characterSubmitted", ({ submitsCaractersQuantity }: { submitsCaractersQuantity: number }) => {
       setPlayersAlready(submitsCaractersQuantity);
+    });
+    socket.on("assignedCharactersList", ({ players }) => {
+      console.log("assignedCharacters", players);
     });
 
     // Limpar os eventos ao desmontar o componente ou quando as dependências mudarem

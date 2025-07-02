@@ -8,12 +8,10 @@ export function startGame(io: Server, data: { roomId: string; userId: string }) 
     userId: z.string(),
   });
 
-  console.log("startGame", data);
-
   const { roomId, userId } = schema.parse(data);
 
   const room = RoomService.getRoom(roomId);
-  console.log("room", room);
+
   const playerIsLeader = room?.players.find((player) => player.userId === userId)?.adm;
 
   if (playerIsLeader) {
